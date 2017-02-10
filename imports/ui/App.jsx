@@ -20,8 +20,8 @@ class App extends Component {
 
         const text = ReactDOM.findDOMNode(this.refs.textInput).value.trim();
 
-        Tasks.insert({text, createdAt: new Date(), owner: Meteor.userId(), username: Meteor.user().username});
-
+        Meteor.call('tasks.insert', text);
+        
         ReactDOM.findDOMNode(this.refs.textInput).value = '';
 
     }
@@ -52,16 +52,13 @@ class App extends Component {
                         Hide Completed Tasks
                     </label>
 
-                    <AccountsUIWrapper/>
-
-                    {
-                      this.props.currentUser?
-                      <form className="new-task" onSubmit={this.handleSubmit.bind(this)}>
+                    <AccountsUIWrapper/> {this.props.currentUser
+                        ? <form className="new-task" onSubmit={this.handleSubmit.bind(this)}>
                                 <input type="text" ref="textInput" placeholder="Type to add new tasks"/>
 
                             </form>
                         : ''
-                    }
+}
 
                 </header>
 
@@ -76,7 +73,7 @@ class App extends Component {
 App.propTypes = {
     tasks: PropTypes.array.isRequired,
     incompleteCount: PropTypes.number.isRequired,
-    currentUser: PropTypes.object,
+    currentUser: PropTypes.object
 };
 
 export default createContainer(() => {
